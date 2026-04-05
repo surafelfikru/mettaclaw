@@ -23,8 +23,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Install FAISS (Static Library)
 RUN git clone --depth 1 https://github.com/facebookresearch/faiss.git /faiss
 WORKDIR /faiss
+# --parallel N should match available CPU cores (too high causes OOM on low-memory VPS)
 RUN cmake -B build -DFAISS_ENABLE_GPU=OFF -DFAISS_ENABLE_PYTHON=OFF -DBUILD_SHARED_LIBS=OFF \
- && cmake --build build --config Release --parallel \
+ && cmake --build build --config Release --parallel 2 \
  && cmake --install build
 
 # Install PeTTa (MeTTa-to-Prolog transpiler)
